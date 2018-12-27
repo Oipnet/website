@@ -4,10 +4,11 @@ namespace App\Listeners;
 
 use App\Events\PostCreated;
 use App\Repository\PostRepository;
+use Illuminate\Cache\CacheManager;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
+use Symfony\Contracts\Cache\CacheInterface;
+
 
 class IncrementPostCountCache
 {
@@ -15,15 +16,21 @@ class IncrementPostCountCache
      * @var PostRepository
      */
     private $postRepository;
+    /**
+     * @var CacheManager
+     */
+    private $cache;
 
     /**
      * Create the event listener.
      *
      * @param PostRepository $postRepository
+     * @param CacheManager $cache
      */
-    public function __construct(PostRepository $postRepository)
+    public function __construct(PostRepository $postRepository, CacheManager $cache)
     {
         $this->postRepository = $postRepository;
+        $this->cache = $cache;
     }
 
     /**
@@ -33,10 +40,10 @@ class IncrementPostCountCache
      */
     public function handle()
     {
-        if (Cache::has('posts_count')) {
-            Cache::increment('posts_count');
+        if ($this->cache->has('posts_count')) {
+            $this->cache->increment('posts_count');
         } else {
-            Cache::forever('posts_count', $this->postRepository->count() + 1);
+            $this->cache->forever('posts_count', $this->postRepository->count() + 1);
         }
     }
 }

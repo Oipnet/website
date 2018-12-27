@@ -1,8 +1,8 @@
 <?php
 namespace App\Repository;
 
+use Illuminate\Cache\CacheManager;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
 
 /**
  * App base Repository
@@ -14,6 +14,19 @@ abstract class Repository
      * @var Model
      */
     protected $model;
+    /**
+     * @var CacheManager
+     */
+    private $cache;
+
+    /**
+     * Repository constructor.
+     * @param CacheManager $cache
+     */
+    public function __construct(CacheManager $cache)
+    {
+        $this->cache = $cache;
+    }
 
     /**
      * @param string $slug
@@ -40,7 +53,7 @@ abstract class Repository
      */
     public function count(): int
     {
-        $count = Cache::get($this->model->getTable().'_count', function () {
+        $count = $this->cache->get($this->model->getTable().'_count', function () {
             return $this->model->count();
         });
 

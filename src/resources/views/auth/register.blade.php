@@ -7,13 +7,21 @@
             <div class="card">
                 <div class="card-header">Créer un compte</div>
                 <div class="card-body">
-                    <form class="form-horizontal" method="POST" action="{{ route('register') }}">
+                    <form class="form-horizontal" method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             <input id="name" placeholder="Nom" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
                             @if ($errors->has('name'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('name') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
+                            <input id="username" placeholder="Username" type="text" class="form-control" name="username" value="{{ old('username') }}" required>
+                            @if ($errors->has('username'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('username') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -37,6 +45,11 @@
                         </div>
                         <div class="form-group">
                             <input id="password-confirm" placeholder="Confirmer votre mot de passe" type="password" class="form-control" name="password_confirmation" required>
+                        </div>
+                        <div class="form-group row">
+                            <label for="avatar" class="col-md-4 col-form-label text-md-right">{{ __('Avatar (optional)') }}</label>                            <div class="col-md-8">
+                                <input id="avatar" type="file" class="form-control" name="avatar">
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">

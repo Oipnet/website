@@ -12,7 +12,7 @@ before_script:
   - composer install --no-interaction
   - php artisan key:generate
 
-before install:
+before_install:
   - cd src
 
 install: travis_retry composer install --no-interaction --prefer-source
